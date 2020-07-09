@@ -2,6 +2,7 @@
 /*
   Find the shortest path in a binary maze
   Used Breadth First Search or BFS algorithm
+  Source: https://www.geeksforgeeks.org/shortest-path-in-a-binary-maze/?ref=lbp
 */
 
 /** Class representing a point. */
