@@ -9,6 +9,11 @@
     Source: https://www.geeksforgeeks.org/find-whether-path-two-cells-matrix/?ref=lbp    
 
     Used algorithm: Breadth first search
+
+    Time Complexity: O(n*m).
+    Every cell of the matrix is visited only once so the time complexity is O(n*m).
+    Space Complexity: O(n*m).
+    The space is required to store the visited array and to create the queue.
  */
 
 
@@ -37,7 +42,7 @@ class Point {
   }
 
   isValid() {
-    return this.x >= 0 && this.y >= 0 && this.x < this.mx.length && this.y < this.mx.length && !this.isVisited()
+    return this.x >= 0 && this.y >= 0 && this.x < this.mx.length && this.y < this.mx.length && !this.isVisited() && !this.isBlankWall()
   }
 }
 
@@ -47,7 +52,7 @@ class Point {
  * @return Return a boolean
  */
 function isPath(mx) {
-  const visitedPointChecklist = [...Array(mx.length)].map(e => Array(mx.length).fill(false));
+  const visitedPointChecklist = Array.from({length: mx.length}, e => Array(mx.length).fill(false));
   const srcIndex = mx.flat().indexOf(1)
   const sourcePoint = new Point(srcIndex % mx.length, Math.floor(srcIndex / mx.length), mx, visitedPointChecklist)
   const queue = [sourcePoint]
@@ -61,7 +66,7 @@ function isPath(mx) {
 
     nx.forEach((v, i) => {
       const neighbor = new Point(point.x + v, point.y + ny[i], mx, visitedPointChecklist);
-      if (neighbor.isValid() && !neighbor.isBlankWall()) {
+      if (neighbor.isValid()) {
         neighbor.setVisited()
         queue.unshift(neighbor);
       }

@@ -35,7 +35,7 @@ class Point {
 
 
 /** 
- * Finds the shortest path from sourse to destination in a given Matrix
+ * Finds the shortest path from source to destination in a given Matrix
  * @param {Array<Array<Number>>} mx - Binary matrix
  * @param {Point} src - Source point
  * @param {Point} dest - Destination point
