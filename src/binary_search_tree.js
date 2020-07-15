@@ -8,7 +8,6 @@
  * Complete Binary Tree: A full binary tree is a binary tree in which every node is a leaf or has exactly two children.
  */
 
-
 class Node {
   constructor(data) {
     this.data = data;
@@ -21,27 +20,31 @@ class BST {
     listOfNumbers.forEach(e => this.insert(e))
   }
 
-  insert(data, parent) {
-    if (!parent) {
+  insert(data, root) {
+    if (!root) {
       if (!this.root) {
         this.root = new Node(data)
         return
       } else {
-        parent = this.root
+        root = this.root
       }
     }
 
-    if (data > parent.data) {
-      if (!parent.right) {
-        parent.right = new Node(data)
+    // Prevent duplication
+    if (data === root.data)
+      return;
+
+    if (data > root.data) {
+      if (!root.right) {
+        root.right = new Node(data)
       } else {
-        return this.insert(data, parent.right)
+        return this.insert(data, root.right)
       }
     } else {
-      if (!parent.left) {
-        parent.left = new Node(data)
+      if (!root.left) {
+        root.left = new Node(data)
       } else {
-        return this.insert(data, parent.left)
+        return this.insert(data, root.left)
       }
     }
   }
@@ -144,18 +147,47 @@ class BST {
     return nodes
   }
 
-  delete(data, parent) {
-    if (!parent) {
-      parent = this.root
-    }
-
-    return
+  remove (data) {
+    this.root = this._remove(data, this.root)
   }
 
+  _remove(data, root) {
+    if (!root) return root;
+
+    if (data < root.data) {
+      root.left = this._remove(data, root.left)
+    } else if (data > root.data) {
+      root.right = this._remove(data, root.right)
+    } else {
+      if (!root.left) return root.right
+      else if (!root.right) return root.left
+
+      // If node has 2 children
+      root.data = this._min(root.right).data
+      root.right = this._remove(root.data, root.right)
+    }
+    return root;
+  }
+
+  min() {
+    return this._min(this.root)
+  }
+
+  _min(root) {
+    return root.left ? this._min(root.left) : root;
+  }
+
+  max() {
+    return this._max(this.root)
+  }
+
+  _max(root) {
+    return root.right ? this._max(root.right) : root
+  }
 }
 
 const array = [
-  73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72
+  73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72, 76, 75, 77, 65
 ]
 
 
@@ -165,6 +197,11 @@ const randomArray = Array.from({
 
 
 const tree = new BST(array);
-console.log(tree.search(72))
-tree.printLevelOrder()
+console.log('Search: ', tree.search(65))
+tree.remove(73)
+tree.remove(66)
+tree.remove(72)
 console.log('Nodes in level 2: ', tree.getNodesInLevel(2))
+console.log('Max node: ', tree.max())
+tree.printLevelOrder()
+
