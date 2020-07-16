@@ -17,7 +17,8 @@ class Node {
 
 class BST {
   constructor(listOfNumbers) {
-    listOfNumbers.forEach(e => this.insert(e))
+    if (listOfNumbers)
+      listOfNumbers.forEach(e => this.insert(e))
   }
 
   insert(data, root) {
@@ -60,11 +61,13 @@ class BST {
     return false;
   }
 
-  inOrderTraversal(node) {
+  getInOrderTraversal(node, array) {
+    if (!array) array = []
     if (node) {
-      this.inOrderTraversal(node.left)
-      console.log(node.data)
-      this.inOrderTraversal(node.right)
+      this.getInOrderTraversal(node.left, array)
+      array.push(node.data)
+      this.getInOrderTraversal(node.right, array)
+      return array
     }
   }
 
@@ -147,7 +150,7 @@ class BST {
     return nodes
   }
 
-  remove (data) {
+  remove(data) {
     this.root = this._remove(data, this.root)
   }
 
@@ -184,24 +187,40 @@ class BST {
   _max(root) {
     return root.right ? this._max(root.right) : root
   }
+
+  balanceTheTree() {
+    const sortedData = this.getInOrderTraversal(this.root)
+    this.root = this._insertSortedArray(sortedData);
+  }
+
+  _insertSortedArray(sortedData) {
+    if (sortedData.length > 0) {
+      const midIndex = Math.ceil((sortedData.length - 1) / 2);
+      const root = new Node(sortedData[midIndex])
+      if (sortedData.length > 1) {
+        root.left = this._insertSortedArray(sortedData.slice(0, midIndex))
+        root.right = this._insertSortedArray(sortedData.slice(midIndex + 1, sortedData.length))
+      }
+      return root
+    } else return null
+  }
 }
 
-const array = [
-  73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72, 76, 75, 77, 65
-]
+module.exports = {
+  Node,
+  BST
+}
 
-
-const randomArray = Array.from({
-  length: 8
-}, e => Math.floor((Math.random() * 100) + 1))
-
-
-const tree = new BST(array);
-console.log('Search: ', tree.search(65))
-tree.remove(73)
-tree.remove(66)
-tree.remove(72)
-console.log('Nodes in level 2: ', tree.getNodesInLevel(2))
-console.log('Max node: ', tree.max())
-tree.printLevelOrder()
-
+// const array = [
+//   73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72, 76, 75, 77, 65, 100, 102
+// ]
+// const tree = new BST(array);
+// console.log(tree.printLevelOrder())
+// tree.balanceTheTree()
+// console.log(tree.printLevelOrder())
+// console.log('Search: ', tree.search(65))
+// tree.remove(73)
+// tree.remove(66)
+// tree.remove(72)
+// console.log('Nodes in level 2: ', tree.getNodesInLevel(2))
+// console.log('Max node: ', tree.max())
