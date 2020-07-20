@@ -31,6 +31,13 @@ class Point {
   setVisited(visitCheckList) {
     visitCheckList[this.y][this.x] = true;
   }
+
+  isValid(mx, visitCheckList) {
+    return this.x >= 0 && this.x < visitCheckList[0].length &&
+        this.y >= 0 && this.y < visitCheckList.length &&
+        !this.isVisited(visitCheckList) &&
+        mx[this.y][this.x] === 1
+  }
 }
 
 
@@ -42,7 +49,7 @@ class Point {
  * @return {Number} Returns the value of shortest path to destination. Returns -1 if not found
  */
 function findTheShortestPath(mx, src, dest) {
-  let visitCheckList = [...Array(mx.length)].map(e => Array(mx[0].length).fill(false))
+  let visitCheckList = Array.from({length: mx.length}, e => Array(mx[0].length).fill(false))
   let queue = [];
   queue.push(src);
 
@@ -52,10 +59,7 @@ function findTheShortestPath(mx, src, dest) {
 
     nx.forEach((v, i) => {
       const adjPoint = new Point(point.x + v, point.y + ny[i], point.dist + 1)
-      if (adjPoint.x >= 0 && adjPoint.x < mx[0].length &&
-        adjPoint.y >= 0 && adjPoint.y < mx.length &&
-        visitCheckList[adjPoint.y][adjPoint.x] === false &&
-        mx[adjPoint.y][adjPoint.x] === 1) {
+      if (adjPoint.isValid(mx, visitCheckList)) {
         adjPoint.setVisited(visitCheckList)
         queue.unshift(adjPoint)
       }
