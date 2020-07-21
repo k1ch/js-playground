@@ -8,14 +8,14 @@
 
 function merge(arr1, arr2) {
   const arr = []
-  while (arr1.length > 0) {
+  while (arr1.length > 0 && arr2.length > 0) {
     const head = arr1.shift()
     while (head > arr2[0]) {
       arr.push(arr2.shift())
     }
     arr.push(head)
   }
-  arr.push(...arr2)
+  arr.push(...arr1, ...arr2)
   return arr
 }
 
@@ -28,5 +28,7 @@ function mergeSort(arr) {
   } else return arr
 }
 
-const unSortArray = Array.from({length: 40}, e=>  Math.ceil(Math.random() * 100))
+const unSortArray = Array.from({
+  length: 40
+}, e => Math.ceil(Math.random() * 100))
 console.log(unSortArray, mergeSort(unSortArray));
