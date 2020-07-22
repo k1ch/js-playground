@@ -204,6 +204,29 @@ class BST {
       return root
     } else return null
   }
+
+  distanceBetweenTwoNodes(nodeData1, nodeData2, root) {
+    if (!root) root = this.root;
+
+    if (nodeData1 < root.data && nodeData2 > root.data) {
+      return this._distanceBetweenRootToNode(nodeData1, root.left, 1) + this._distanceBetweenRootToNode(nodeData2, root.right, 1)
+    }
+    if (nodeData1 > root.data && nodeData2 < root.data) {
+      return this._distanceBetweenRootToNode(nodeData2, root.left, 1) + this._distanceBetweenRootToNode(nodeData1, root.right, 1)
+    }
+
+    if (nodeData1 < root.data && nodeData2 < root.data) return this.distanceBetweenTwoNodes(nodeData1, nodeData2, root.left)
+    if (nodeData1 > root.data && nodeData2 > root.data) return this.distanceBetweenTwoNodes(nodeData1, nodeData2, root.right)
+    if (nodeData1 === root.data) return this._distanceBetweenRootToNode(nodeData2 , root, 0)
+    if (nodeData2 === root.data) return this._distanceBetweenRootToNode(nodeData1 , root, 0)
+    return -1
+  }
+
+  _distanceBetweenRootToNode(nodeValue, root, counter) {
+    if (nodeValue === root.data) return counter
+    if (nodeValue < root.data) return this._distanceBetweenRootToNode(nodeValue, root.left, ++counter)
+    if (nodeValue > root.data) return this._distanceBetweenRootToNode(nodeValue, root.right, ++counter)
+  }
 }
 
 module.exports = {
@@ -211,11 +234,12 @@ module.exports = {
   BST
 }
 
-// const array = [
-//   73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72, 76, 75, 77, 65, 100, 102
-// ]
-// const tree = new BST(array);
-// console.log(tree.printLevelOrder())
+const array = [
+  73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72, 76, 75, 77, 65, 100, 102, 74
+]
+const tree = new BST(array);
+console.log(tree.printLevelOrder())
+console.log(tree.distanceBetweenTwoNodes(44, 74))
 // tree.balanceTheTree()
 // console.log(tree.printLevelOrder())
 // console.log('Search: ', tree.search(65))
