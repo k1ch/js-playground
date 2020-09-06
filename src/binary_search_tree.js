@@ -11,7 +11,8 @@
 class Node {
   constructor(data) {
     this.data = data;
-    this.left, this.right = null
+    this.left = null
+    this.right = null
   }
 }
 
@@ -217,8 +218,8 @@ class BST {
 
     if (nodeData1 < root.data && nodeData2 < root.data) return this.distanceBetweenTwoNodes(nodeData1, nodeData2, root.left)
     if (nodeData1 > root.data && nodeData2 > root.data) return this.distanceBetweenTwoNodes(nodeData1, nodeData2, root.right)
-    if (nodeData1 === root.data) return this._distanceBetweenRootToNode(nodeData2 , root, 0)
-    if (nodeData2 === root.data) return this._distanceBetweenRootToNode(nodeData1 , root, 0)
+    if (nodeData1 === root.data) return this._distanceBetweenRootToNode(nodeData2, root, 0)
+    if (nodeData2 === root.data) return this._distanceBetweenRootToNode(nodeData1, root, 0)
     return -1
   }
 
@@ -226,6 +227,19 @@ class BST {
     if (nodeValue === root.data) return counter
     if (nodeValue < root.data) return this._distanceBetweenRootToNode(nodeValue, root.left, ++counter)
     if (nodeValue > root.data) return this._distanceBetweenRootToNode(nodeValue, root.right, ++counter)
+  }
+
+  /**
+   * Checks if two BST trees are indentical
+   * @param {Node} root1 - root of tree 1
+   * @param {Node} root2 - root of tree 2
+   * @returns boolean
+   */
+  static isIdentical(root1, root2) {
+    if (root1 === null && root2 === null) return true
+    if (!(root1 instanceof Node && root2 instanceof Node)) return false
+    if (root1.data === root2.data && this.isIdentical(root1.left, root2.left) && this.isIdentical(root1.right, root2.right)) return true
+    else return false
   }
 }
 
@@ -238,8 +252,11 @@ const array = [
   73, 15, 95, 54, 45, 66, 11, 44, 77, 99, 72, 76, 75, 77, 65, 100, 102, 74
 ]
 const tree = new BST(array);
-console.log(tree.printLevelOrder())
-console.log(tree.distanceBetweenTwoNodes(44, 74))
+const tree2 = new BST(array);
+tree2.root.right = null
+console.log(BST.isIdentical(tree.root, tree2.root))
+// console.log(tree.printLevelOrder())
+// console.log(tree.distanceBetweenTwoNodes(44, 74))
 // tree.balanceTheTree()
 // console.log(tree.printLevelOrder())
 // console.log('Search: ', tree.search(65))
